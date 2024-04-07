@@ -1,0 +1,13 @@
+Write a Terraform code for creating servers in AWS, GCP and Azure if required
+	AWS --> Jenkins, inbound - all ports and outbound - 80
+	GCP --> Docker
+	Azure --> Kubernetes
+Install Terraform, Git and Ansible in local machine or in local VM or create each VM for each tool
+Once Terraform code is written, commit and push to Github
+Once commit is done, automatically Terraform apply should run through Jenkins pipeline and infrastructure should be created for Docker and Kubernetes
+Through Ansible create congifute Docker and Kubernetes
+Build docker images for application and database
+Configure Kubernetes for managing above Docker images and if possible with the help of Kubernetes increate containers for above application
+
+In Ansible server, install AWX and configure the above 3 servers in AWX for patching of these servers through AWX
+If required open ports for above servers for patching
