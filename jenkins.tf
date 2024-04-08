@@ -100,7 +100,7 @@ resource "aws_instance" "jenkins" {
   key_name               = aws_key_pair.jenkinshost.key_name
   subnet_id              = aws_subnet.jenkins-subnet.id
   vpc_security_group_ids = [aws_security_group.jenkins-sg.id]
-  tag                    = local.common_tag
+  tags                   = local.common_tags
 
   user_data = <<-EOF
               #!/bin/bash
