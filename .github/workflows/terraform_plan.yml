@@ -4,7 +4,7 @@ on:
   pull_request:
 
 env:
-  TF_CLOUD_ORGANIZATION: "Devops"
+  TF_CLOUD_ORGANIZATION: "srushik96"
   TF_API_TOKEN: "${{ secrets.Jenkins }}"
   TF_WORKSPACE: "jenkins"
   CONFIG_DIRECTORY: "./"
