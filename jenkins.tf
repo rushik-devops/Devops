@@ -66,6 +66,22 @@ resource "aws_subnet" "jenkins-subnet" {
 }
 
 
+resource "aws_internet_gateway" "jenkins" {
+   vpc_id     = aws_vpc.jenkins.id
+   tags       = local.common_tags
+}
+
+
+resource "aws_route_table" "jenkins" {
+   vpc_id     = aws_vpc.jenkins.id
+   route {
+	cidr_block = "10.0.0.0/16"
+	gateway_id = aws_internet_gateway.jenkins.id
+   }
+   tags       = local.common_tags
+}
+
+
 resource "aws_security_group" "jenkins-sg" {
   name       = "jenkins-sg"
   vpc_id     = aws_vpc.jenkins.id
