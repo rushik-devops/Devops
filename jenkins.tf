@@ -47,7 +47,7 @@ resource "aws_key_pair" "jenkinshost" {
 
 
 locals {
-	common_tags {
+	common_tags = {
 		Name = "jenkins"
 	}
 }
@@ -117,3 +117,4 @@ resource "aws_instance" "jenkins" {
 
 output "jenkins-address" {
   value = "${aws_instance.jenkins.public_dns}:8080"
+}
