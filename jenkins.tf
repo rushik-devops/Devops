@@ -111,12 +111,13 @@ resource "aws_security_group" "jenkins-sg" {
 
 
 resource "aws_instance" "jenkins" {
-  ami                    = data.aws_ami.ubuntu.id
-  instance_type          = "t2.micro"
-  key_name               = aws_key_pair.jenkinshost.key_name
-  subnet_id              = aws_subnet.jenkins-subnet.id
-  vpc_security_group_ids = [aws_security_group.jenkins-sg.id]
-  tags                   = local.common_tags
+  ami                         = data.aws_ami.ubuntu.id
+  instance_type               = "t2.micro"
+  key_name                    = aws_key_pair.jenkinshost.key_name
+  subnet_id                   = aws_subnet.jenkins-subnet.id
+  vpc_security_group_ids      = [aws_security_group.jenkins-sg.id]
+  associate_public_ip_address = "true"
+  tags                        = local.common_tags
 
   user_data = <<-EOF
               #!/bin/bash
