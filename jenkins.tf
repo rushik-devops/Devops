@@ -131,6 +131,4 @@ resource "aws_instance" "jenkins" {
 }
 
 
-output "jenkins-address" {
-  value = "${aws_instance.jenkins.public-ip}:8080"
-}
+
