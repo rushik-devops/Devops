@@ -124,20 +124,9 @@ resource "aws_instance" "jenkins" {
   vpc_security_group_ids      = [aws_security_group.jenkins-sg.id]
   associate_public_ip_address = "true"
   tags                        = local.common_tags
-
-  user_data = <<-EOF
-              #!/bin/bash
-	      sudo apt-get install openjdk-8-jdk -y
-              sudo apt-get install openjdk-11-jdk-headless -y
-              sudo wget -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
-              echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
-              sudo apt-get update
-              sudo apt-get install jenkins -y
-              EOF
 }
 
 
 output "jenkins_address" {
 	value = aws_instance.jenkins.public_ip
 }
-
