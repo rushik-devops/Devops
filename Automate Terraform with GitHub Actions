@@ -1,0 +1,15 @@
+1)  Need to have accounts in GitHub, AWS and Terraform cloud.
+2)  Create a workspace in Terraform cloud "jenkins" and select "API-driven Workflow".
+3)  Add "AWS_ACCESS_KEY_ID" and "AWS_SECRET_ACCESS_KEY" as enviornment variables for workspace and select secret access key as sensitive.
+4)  Create an API token using link: https://app.terraform.io/app/settings/tokens in Terraform cloud save this token.
+5)  Create a new repository and add workflows(Terraform_Plan.yml and Terraform_Apply.yml) in .github directoy.
+6) In above yaml files, mention the environment variables used by the workflow. Replace organization, API-token and workspace accordingly.
+7)  Nagivate to settings page in new repository. Open the "Secrets and variables" menu then select "Actions".
+8)  Now select "New repository secret". Create a secret named "jenkins", setting the Terraform API Token created in the previous step as the value.
+9)  We can clone this repo to our local machine and create a new branch(terraform) to work on jenkins.tf file.
+10) Once terraform file is ready, push these changes to our repo.
+11) Now open the pull-request in terraform branch or create a new pull from terraform branch.
+12) Pull request will trigger "Terraform plan" actions workflow. When the workflow completes it will add a comment with link to speculative plan.
+13) Click the "Terraform Cloud Plan" link to view the plan in Terraform cloud.
+14) Now Merge the pull request then we can see "Terraform Apply" action workflow in "Actions" tab.
+15) We can verify by checking the created EC2 in AWS. 
