@@ -102,8 +102,8 @@ resource "aws_security_group" "jenkins-sg" {
   // connectivity to ubuntu mirrors is required to run `apt-get update` and `apt-get install apache2`
   egress {
     from_port   = 0
-    to_port     = 65535
-    protocol    = "tcp"
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = local.common_tags
@@ -121,17 +121,16 @@ resource "aws_instance" "jenkins" {
 
   user_data = <<-EOF
               #!/bin/bash
-              sudo yum update –y
-			        sudo wget -o /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
-			        sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
-			        sudo dnf install java-11-amazon-corretto -y
-			        sudo yum install jenkins -y
-			        sudo systemctl enable jenkins
-			        sudo systemctl start jenkins
+	      sudo apt-get install openjdk-8-jdk -y
+              sudo apt-get install openjdk-11-jdk-headless -y
+              sudo wget -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+              echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+              sudo apt-get update
+              sudo apt-get install jenkins -y
               EOF
 }
 
 
 output "jenkins-address" {
-  value = "${aws_instance.jenkins.public_dns}:8080"
+  value = "${aws_instance.jenkins.public-ip}:8080"
 }
