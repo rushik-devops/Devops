@@ -110,6 +110,12 @@ resource "aws_security_group" "jenkins-sg" {
 }
 
 
+resource "aws_subnet_association" "jenkins" {
+	subnet_id	= aws_subnet.jenkins.id
+	route_table_id	= aws_route_table.jenkins.id
+}
+
+
 resource "aws_instance" "jenkins" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t2.micro"
