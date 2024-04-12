@@ -131,4 +131,7 @@ resource "aws_instance" "jenkins" {
 }
 
 
+output "jenkins_address" {
+	value = aws_instance.jenkins.public_ip
+}
 
