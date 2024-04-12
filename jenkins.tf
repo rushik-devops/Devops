@@ -110,7 +110,7 @@ resource "aws_security_group" "jenkins-sg" {
 }
 
 
-resource "aws_subnet_association" "jenkins" {
+resource "aws_route_table_association" "jenkins" {
 	subnet_id	= aws_subnet.jenkins.id
 	route_table_id	= aws_route_table.jenkins.id
 }
