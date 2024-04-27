@@ -33,59 +33,59 @@ data "aws_ami" "ubuntu" {
 }
 
 
-resource "tls_private_key" "jenkinskey" {
+resource "tls_private_key" "awxkey" {
 	algorithm = "RSA"
 }
-resource "local_file" "jenkins" {
-	content = tls_private_key.jenkinskey.private_key_pem
-	filename = "jenkins.pem"
+resource "local_file" "awx" {
+	content = tls_private_key.awxkey.private_key_pem
+	filename = "awx.pem"
 }
-resource "aws_key_pair" "jenkinshost" {
-	key_name = "jenkins"
-	public_key = tls_private_key.jenkinskey.public_key_openssh
+resource "aws_key_pair" "awxhost" {
+	key_name = "awx"
+	public_key = tls_private_key.awxkey.public_key_openssh
 }
 
 
 locals {
 	common_tags = {
-		Name = "jenkins"
+		Name = "awx"
 	}
 }
 
 
-resource "aws_vpc" "jenkins" {
+resource "aws_vpc" "awx" {
   cidr_block = "10.0.0.0/16"
   tags       = local.common_tags
 }
 
 
-resource "aws_subnet" "jenkins-subnet" {
-   vpc_id     = aws_vpc.jenkins.id
+resource "aws_subnet" "awx-subnet" {
+   vpc_id     = aws_vpc.awx.id
    cidr_block = "10.0.0.0/16"
    tags       = local.common_tags
 }
 
 
-resource "aws_internet_gateway" "jenkins" {
-   vpc_id     = aws_vpc.jenkins.id
+resource "aws_internet_gateway" "awx" {
+   vpc_id     = aws_vpc.awx.id
    tags       = local.common_tags
 }
 
 
-resource "aws_route_table" "jenkins" {
-   vpc_id     = aws_vpc.jenkins.id
+resource "aws_route_table" "awx" {
+   vpc_id     = aws_vpc.awx.id
    route {
 	cidr_block = "0.0.0.0/0"
-	gateway_id = aws_internet_gateway.jenkins.id
+	gateway_id = aws_internet_gateway.awx.id
    }
    tags       = local.common_tags
 }
 
 
-resource "aws_security_group" "jenkins-sg" {
-  name       = "jenkins-sg"
-  vpc_id     = aws_vpc.jenkins.id
-  depends_on = [aws_vpc.jenkins]
+resource "aws_security_group" "awx-sg" {
+  name       = "awx-sg"
+  vpc_id     = aws_vpc.awx.id
+  depends_on = [aws_vpc.awx]
   ingress {
     from_port   = 8080
     to_port     = 8080
@@ -110,23 +110,23 @@ resource "aws_security_group" "jenkins-sg" {
 }
 
 
-resource "aws_route_table_association" "jenkins" {
-	subnet_id	= aws_subnet.jenkins-subnet.id
-	route_table_id	= aws_route_table.jenkins.id
+resource "aws_route_table_association" "awx" {
+	subnet_id	= aws_subnet.awx-subnet.id
+	route_table_id	= aws_route_table.awx.id
 }
 
 
-resource "aws_instance" "jenkins" {
+resource "aws_instance" "awx" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t2.micro"
-  key_name                    = aws_key_pair.jenkinshost.key_name
-  subnet_id                   = aws_subnet.jenkins-subnet.id
-  vpc_security_group_ids      = [aws_security_group.jenkins-sg.id]
+  key_name                    = aws_key_pair.awxhost.key_name
+  subnet_id                   = aws_subnet.awx-subnet.id
+  vpc_security_group_ids      = [aws_security_group.awx-sg.id]
   associate_public_ip_address = "true"
   tags                        = local.common_tags
 }
 
 
-output "jenkins_website" {
-	value = aws_instance.jenkins.public_ip
+output "awx_website" {
+	value = aws_instance.awx.public_ip
 }
