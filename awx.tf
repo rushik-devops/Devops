@@ -124,6 +124,24 @@ resource "aws_instance" "awx" {
   vpc_security_group_ids      = [aws_security_group.awx-sg.id]
   associate_public_ip_address = "true"
   tags                        = local.common_tags
+  connection {
+	type = "ssh"
+	user = "ubuntu"
+	private_key = tls_private_key.awxkey.private_key_pem
+	host = self.public_ip
+  }
+  provisioner "file" {
+	source 	    = "docker.sh"
+	destination = "/home/ubuntu/docker.sh"
+  }
+  provisioner "remote-exec" {
+	inline = [
+		"sudo chmod +x /home/ubuntu/docker.sh"
+		"sudo sh /home/ubuntu/docker.sh"
+		"sudo docker pull quay.io/ansible/awx"
+		"sudo docker run -it -d --name awx -p 8080:8080 quay.io/ansible/awx"
+	]
+  }
 }
 
 
