@@ -131,7 +131,7 @@ resource "aws_instance" "awx" {
 	host = self.public_ip
   }
   provisioner "file" {
-	source 	    = "docker.sh",
+	source 	    = "docker.sh"
 	destination = "/home/ubuntu/docker.sh"
   }
   provisioner "remote-exec" {
